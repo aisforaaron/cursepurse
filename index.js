@@ -16,7 +16,6 @@ module.exports = {
     },
 
     // @param {string} wordText Text to add to cursed words
-    // @todo add text safe check before adding to db?
     addCurse: function (newCurseText) {
         var str = new RegExp('^' + newCurseText + '$', "i");
         // check to make sure not already in db?
