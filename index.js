@@ -3,8 +3,6 @@
 var mongoose   = require('mongoose');
 var cursePurse = require('./models/curse');
 
-mongoose.set('debug', true); // @todo remove this line when done
-
 module.exports = {
 
     // @param {string} url Mongo db connection string
@@ -84,14 +82,57 @@ module.exports = {
             }
         });
 
-    }
+    },
 
-    // updateCurseById  -  update a word by id
-    // getCurse  -  search for a word in db, return object
-    // getCurseById  -  return a word collection by object id
-    // getCurseCount  -  return # of words in db
-    // deleteCurseById  -  remove a word from db by id
-    // hideCurseByText  -  update show flag to false for a word by text match
-    // deleteWordByText  -  remove a word by text matching, case-sensitive?
+    // Update a curse by id
+    // @param {object} curseId Curse ID to update
+    // @param {array} updateData Array of fields to update {curse: 'word', ban: true/false}
+    // @param {callback} cb Callback method
+    updateCurseById: function(curseId, updateData, cb) {
+        cursePurse.findByIdAndUpdate(curseId, updateData, function (err) {
+            if (err) {
+                throw err;
+            } else {
+                return cb(null, true);
+            }
+        });
+    },
+
+    // search for a word in db, return object
+    // @param {string} curse Curse word to find
+    getCurse: function (curse, cb) {
+        var curseNoCase = new RegExp('^' + curse + '$', 'i');
+        cursePurse.find({curse: curseNoCase}, function (err, res) {
+            if (err) {
+                throw err;
+            } else {
+                return cb(null, res);
+            }
+        });
+    },
+
+    getCurseById: function(curseId, cb) {
+        cursePurse.findById(curseId, function (err, res) {
+            if (err) {
+                throw err;
+            } else {
+                return cb(null, res);
+            }
+        });
+    },
+
+    // @param {string} curseId Curse ID to remove.
+    // @return {boolean} Return true if curse removed.
+    deleteCurseById: function(curseId, cb) {
+        cursePurse.remove({
+            _id: curseId
+        }, function (err, res) {
+            if (err) {
+                throw err;
+            } else {
+                return cb(null, true);
+            }
+        });
+    }
 
 };
