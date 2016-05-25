@@ -1,6 +1,6 @@
 {
   "name": "cursepurse",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Node.js module that keeps a dictionary of words that you define are profane in your Node app.",
   "main": "index.js",
   "scripts": {
