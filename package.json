@@ -1,14 +1,12 @@
 {
   "name": "cursepurse",
-  "version": "0.1.2",
+  "version": "0.1.3",
+  "homepage": "https://github.com/aisforaaron/cursepurse#readme",
   "description": "Node.js module that keeps a dictionary of words that you define are profane in your Node app.",
-  "main": "index.js",
-  "scripts": {
-    "test": "make test"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/aisforaaron/cursepurse.git"
+  "author": {
+    "name": "Aaron Deutsch",
+    "email": "aarondllc@gmail.com",
+    "url": "http://aarond.com"
   },
   "keywords": [
     "swear",
@@ -17,10 +15,9 @@
     "mongo",
     "database"
   ],
-  "author": {
-    "name": "Aaron Deutsch",
-    "email": "aarondllc@gmail.com",
-    "url": "http://aarond.com"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aisforaaron/cursepurse.git"
   },
   "licenses": [
     {
@@ -28,22 +25,15 @@
       "url": "https://github.com/brentertz/scapegoat/blob/master/LICENSE-MIT"
     }
   ],
-  "bugs": {
-    "url": "https://github.com/aisforaaron/cursepurse/issues"
-  },
-  "homepage": "https://github.com/aisforaaron/cursepurse#readme",
-  "devDependencies": {
-    "mocha": "^2.4.5"
-  },
+  "main": "index.js",
   "dependencies": {
     "mongoose": "^4.4.17",
     "async": "^1.5.2"
   },
-  "gitHead": "91fbbff5d3bc2f269abb5c212527a7bdc4ee1bd1",
-  "readme": "# CursePurse\nNode.js module that keeps a dictionary of words that you define are profane in your Node app.\n\n## Module Goals\n- Create a node module which stores words or phrases in a private Mongo DB collection which you can search against to see if you want your app to proceed with using that text.\n- Many modules exist which use json files, but applications may then need to store bad word files in their project repo. CursePurse offloads that to a deploy or provision step, and keeps the words out of view of the public.\n\n## Installation\n- npm install cursepurse\n- add require code and connect to db before using\n  - `var cursepurse = require('cursepurse')`\n  - `cursepurse.dbConnect('mongodb://localhost/local')`\n\n## Code Conventions used\n- Mongo collection is `curses`\n- Objects created in code use name `cursePurse`\n- Db model called from module is `cursePurse`\n- Words or text stored in cursepurse are `curse` words\n\n## Quick Example\n- Add text to the db\n  - `cursepurse.addCurse('your-words')`\n- Check text for cursed word(s), will return true if word is banned\n  - `if(cursepurse.isCurse('your-words')===false) {..ok to proceed..}`\n\n## Example Usage\nRequire library and open db connection\n```\nvar cursePurse = require('cursepurse');\ncursePurse.dbConnect('mongodb://localhost/local');\n```\n\nAdd a curse to the purse\n```\ncursePurse.addCurse('new-curse-word');\n```\n\nGet curse count\n```\ncursePurse.getCurseCount(function (err, res) {\n  if (res) console.log('count', res);\n});\n```\n\nUpdate a curse document\n```\nvar updateData = {curse: 'new-word', ban: false};\ncursePurse.updateCurseById('curse-id', updateData, function(err, res) {\n    if (err) throw err;\n    if (res === true) {\n       console.log('updated curse');\n    } else {\n        console.log('did not update curse');\n    }\n});\n```\n\nBulk import curses by json (passes to addCurse)\n```\ncursePurse.importCurses({'new-word', 'another-new', 'more stuff to add'});\n```\n\nGet list of all curses\n```\ncursePurse.getCurseList(function (err, res) {\n    console.log('banned words', res);\n});\n```\n\nCheck word to see if it's a curse\n```\ncursePurse.isCurse(str, function(res){\n    if (res) {\n        console.log('this is banned!!!');\n    } else {\n        console.log('you are nice guy');\n    }\n});\n```\n\nGet a curse object\n```\ncursePurse.getCurse('new-word', function(err, res) {\n    if (err) throw err;\n    console.log('res', res);\n});\n```\n\nGet a curse by id\n```\ncursePurse.getCurseById('id-here', function (err, res) {\n    if (err) throw err;\n    console.log('res', res);\n});\n```\n\nDelete a curse by id\n```\ncursePurse.deleteCurseById('id-here', function (err, res) {\n    if (err) throw err;\n    console.log('res', res);\n});\n```",
-  "readmeFilename": "README.md",
-  "_id": "cursepurse@0.1.0",
-  "_shasum": "b569d333c5a71c48bcaaf141063929d9991c8692",
-  "_from": "cursepurse@>=0.1.0 <0.2.0",
-  "_resolved": "git://github.com/aisforaaron/cursepurse.git#91fbbff5d3bc2f269abb5c212527a7bdc4ee1bd1"
+  "devDependencies": {
+    "mocha": "^2.4.5"
+  },
+  "scripts": {
+    "test": "make test"
+  }
 }
