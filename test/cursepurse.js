@@ -20,7 +20,6 @@ describe('DB Connect', function () {
 describe('Curse Purse method testing.', function () {
     it('addCurse - Add new Curse.', function (done) {
         cursePurse.addCurse(cpTest.curseWord, function (err, res) {
-            console.log('Res object', res);
             assert.equal(res.curse, cpTest.curseWord);
             done();
         });
@@ -52,7 +51,6 @@ describe('Curse Purse method testing.', function () {
     it('importCurses - Import curses from array.', function (done) {
         cursePurse.importCurses(cpTest.importList, function (err, res) {
             cursePurse.getCurseCount(function (errCount, resCount) {
-                console.log('curse count of importList', cpTest.importList.length);
                 assert.equal(resCount, cpTest.importList.length + 1);
                 done();
             });
@@ -64,6 +62,12 @@ describe('Curse Purse test db cleanup.', function (done) {
     it('deleteAllCurses - Remove all curses from collection.', function () {
         cursePurse.deleteAllCurses(function (err, res) {
             assert.equal(res, '1');
+            done();
+        });
+    });
+    it('deleteCurseDatabase - Remove test db.', function () {
+        cursePurse.deleteCurseDatabase(cpTest.dbUrl, function (err, res) {
+            assert.ok(err);
             done();
         });
     });

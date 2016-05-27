@@ -21,7 +21,7 @@ Node.js module that keeps a dictionary of words that you define are profane in y
 
 ## Test Cases with Mocha
 - You may need to install the devDependencies or just install [Mocha](https://mochajs.org) globally.
-- Test file will create a new Mongo DB, collection and data to test with, then delete the data after each run.
+- Test file will create a new Mongo DB, collection and data to test with, then delete the data/collection/database after each run.
 - Test files found in the 'test' dir can be run from command line. This command will run the Makefile which is set to use Mocha.
     ```
     $ npm test

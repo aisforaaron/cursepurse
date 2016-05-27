@@ -1,4 +1,4 @@
-// Work with Curses collection in Mongo. ZZZ
+// Work with Curses collection in Mongo.
 
 var mongoose   = require('mongoose');
 var cursePurse = require('./models/curse');
@@ -12,7 +12,6 @@ module.exports = {
         mongoose.connect(url, function (err) {
             if (err) {
                 return cb(err, false);
-                process.exit(1);
             } else {
                 return cb(err, true);
             }
@@ -34,13 +33,11 @@ module.exports = {
                     if (err) {
                         return cb(err, false);
                     } else {
-                        console.log('Added new curse to purse.', newCurseText);
                         return cb(err, res);
                     }
                 });
             } else {
-                console.log('Curse already in purse.');
-                // return cb(err, res);
+                return cb(err, res);
             }
         });
     },
@@ -136,7 +133,7 @@ module.exports = {
     deleteCurseById: function (curseId, cb) {
         cursePurse.remove({
             _id: curseId
-        }, function (err, res) {
+        }, function (err) {
             if (err) {
                 return cb(err, false);
             } else {
@@ -148,7 +145,19 @@ module.exports = {
     // @param {callback} cb Callback method
     // @return {boolean} Return true if all curses removed.
     deleteAllCurses: function (cb) {
-        cursePurse.remove({}, function (err, res) {
+        cursePurse.remove({}, function (err) {
+            if (err) {
+                return cb(err, false);
+            } else {
+                return cb(err, true);
+            }
+        });
+    },
+
+    // @param {callback} cb Callback method
+    // @return {boolean} Return true if all curses removed.
+    deleteCurseDatabase: function (dbUrl, cb) {
+        mongoose.connection.db.dropDatabase(function (err) {
             if (err) {
                 return cb(err, false);
             } else {
