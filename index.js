@@ -6,23 +6,28 @@ var async      = require('async');
 
 module.exports = {
 
-    // @param {string} url Mongo db connection string
+    // @param {mixed} db Mongoose connection object or new url connection string
     // @param {callback} cb Callback method (err, boolean)
-    dbConnect: function (url, cb) {
-        mongoose.connect(url, function (err) {
-            if (err) {
-                return cb(err, false);
-            } else {
-                return cb(err, true);
-            }
-        });
+    dbConnect: function (db, cb) {
+        if (typeof db === 'object') {
+            return db; // just passing mongoose object into cursePurse, no new connection
+        } else if (typeof db === 'string') {
+            mongoose.connect(db, function (err) {
+                if (err) {
+                    return cb(err, false);
+                } else {
+                    return cb(err, true);
+                }
+            });
+        }
     },
 
     // @param {string} wordText Text to add to cursed words
     // @param {callback} cb callback method
     addCurse: function (newCurseText, cb) {
-        var str = new RegExp('^' + newCurseText + '$', 'i');
-        // check to make sure not already in db?
+        // escape special chars http://stackoverflow.com/a/17493954
+        var strEsc = newCurseText.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+        var str    = new RegExp('^' + strEsc + '$', 'i');
         cursePurse.findOne({curse: str, ban: true}, function (err, res) {
             if (err) {
                 return cb(err, false);
@@ -69,8 +74,10 @@ module.exports = {
 
     // Loop through passed array and send each addCurse
     // @param {array} curseList Array of curses to add
+    // @return {object} err, res object returned without callback method
     importCurses: function (curseList, cb) {
-        async.map(curseList, this.addCurse, function (err, res) {
+        var curseArr = JSON.parse(curseList);
+        async.map(curseArr, this.addCurse, function (err, res) {
             return cb(err, res);
         });
     },
