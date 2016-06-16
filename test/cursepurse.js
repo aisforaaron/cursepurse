@@ -4,9 +4,9 @@ var assert     = require('assert');
 var cursePurse = require('cursepurse');
 var cpTest     = {
     dbUrl: 'mongodb://localhost/cptest',
-    curseWord: 'dirty words',
-    cleanWord: 'clean room',
-    importList: ['red', 'blue', 'green', 'yellow']
+    curseWord: 'dirty',
+    cleanWord: 'clean',
+    importList: ['red', 'blue', 'green', 'yellow', 'dirty']
 };
 
 describe('DB Connect', function () {
@@ -51,7 +51,7 @@ describe('Curse Purse method testing.', function () {
     it('importCurses - Import curses from array.', function (done) {
         cursePurse.importCurses(cpTest.importList, function (err, res) {
             cursePurse.getCurseCount(function (errCount, resCount) {
-                assert.equal(resCount, cpTest.importList.length + 1);
+                assert.equal(resCount, cpTest.importList.length);
                 done();
             });
         });

@@ -58,16 +58,26 @@ module.exports = {
         });
     },
 
-    // search for a word in db, return false if not a banned word
+    // search for a word or phrase in db, return false if not a banned word
     // @param {callback} cb callback method
     // @return {boolean} bool true if word is found and Mongo search not null
     isCurse: function (curseWord, cb) {
-        var str = new RegExp('^' + curseWord + '$', 'i');
-        cursePurse.findOne({curse: str, ban: true}, function (err, res) {
-            if (err || (res == null)) {
-                return cb(err, false);
+        // loop through each word in phrase to check for bad words
+        // using async lib, this will check each item before returning final result
+        async.each(curseWord.split(/\s+|_+|-+|\++/g), function(item, callback) {
+            var str = new RegExp('^' + item + '$', 'i');
+            cursePurse.findOne({curse: str, ban: true}, function (err, res) {
+                if (err || (res !== null)) {
+                    callback(true); // it's a curse!
+                } else {
+                    callback(false); // clean
+                }
+            });
+        }, function(err){
+            if (err) {
+                return cb(err, true); // it's a curse!
             } else {
-                return cb(err, true);
+                return cb(err, false); // clean
             }
         });
     },
@@ -76,13 +86,12 @@ module.exports = {
     // @param {array} curseList Array of curses to add
     // @return {object} err, res object returned without callback method
     importCurses: function (curseList, cb) {
-        var curseArr = JSON.parse(curseList);
-        async.map(curseArr, this.addCurse, function (err, res) {
+        async.map(curseList, this.addCurse, function (err, res) {
             return cb(err, res);
         });
     },
 
-    // @param {callback} cb Callback method?
+    // @param {callback} cb Callback method
     getCurseCount: function (cb) {
         cursePurse.count(function (err, res) {
             if (err) {
