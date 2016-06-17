@@ -25,6 +25,9 @@ module.exports = {
     // @param {string} wordText Text to add to cursed words
     // @param {callback} cb callback method
     addCurse: function (newCurseText, cb) {
+        newCurseText = newCurseText.trim();
+        // replace internal multiple spaces with one
+        newCurseText = newCurseText.replace(/\s\s+/g, ' ');
         // escape special chars http://stackoverflow.com/a/17493954
         var strEsc = newCurseText.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
         var str    = new RegExp('^' + strEsc + '$', 'i');
@@ -86,7 +89,13 @@ module.exports = {
     // @param {array} curseList Array of curses to add
     // @return {object} err, res object returned without callback method
     importCurses: function (curseList, cb) {
-        async.map(curseList, this.addCurse, function (err, res) {
+        // format curseArr based on typeof param
+        if(typeof curseList == 'string') {
+            var curseArr = curseList.split(",");
+        } else {
+            var curseArr = JSON.parse(JSON.stringify(curseList));
+        }
+        async.map(curseArr, this.addCurse, function (err, res) {
             return cb(err, res);
         });
     },
