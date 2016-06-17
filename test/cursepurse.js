@@ -6,7 +6,9 @@ var cpTest     = {
     dbUrl: 'mongodb://localhost/cptest',
     curseWord: 'dirty',
     cleanWord: 'clean',
-    importList: ['red', 'blue', 'green', 'yellow', 'dirty']
+    importListArray: ['red', 'blue', 'green', 'yellow', 'dirty'],
+    importListString: ['eggs', 'potatoes', 'toast', 'jelly'].toString(),
+    importListStringCount: 4
 };
 
 describe('DB Connect', function () {
@@ -49,9 +51,17 @@ describe('Curse Purse method testing.', function () {
         });
     });
     it('importCurses - Import curses from array.', function (done) {
-        cursePurse.importCurses(cpTest.importList, function (err, res) {
+        cursePurse.importCurses(cpTest.importListArray, function (err, res) {
             cursePurse.getCurseCount(function (errCount, resCount) {
-                assert.equal(resCount, cpTest.importList.length);
+                assert.equal(resCount, cpTest.importListArray.length);
+                done();
+            });
+        });
+    });
+    it('importCurses - Import curses from string.', function (done) {
+        cursePurse.importCurses(cpTest.importListString, function (err, res) {
+            cursePurse.getCurseCount(function (errCount, resCount) {
+                assert.equal(resCount, cpTest.importListStringCount + cpTest.importListArray.length);
                 done();
             });
         });
